@@ -1,0 +1,91 @@
+{% extends "products/base.html" %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Checkout</h1>
+
+{% if cart_items %}
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart_items %}
+      <tr>
+        <td>{{ item.product.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>₹ {{ item.product.price }}</td>
+        <td>₹ {{ item.total_price }}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td colspan="3" class="text-end">
+          <strong>Total:</strong>
+        </td>
+        <td>
+          <strong>₹ {{ total_price }}</strong>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Razorpay Checkout button -->
+  <button id="rzp-button" class="btn btn-success">
+    Pay with Razorpay
+  </button>
+
+  <!-- Hidden form for callback -->
+  <form id="payment-form"
+        method="post"
+        action="{% url 'payment_callback' %}">
+    {% csrf_token %}
+    <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+    <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+  </form>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    var options = {
+        "key": "{{ razorpay_key_id }}",
+        "amount": "{{ razorpay_amount }}",
+        "currency": "INR",
+        "name": "My Django Shop",
+        "description": "Order Payment",
+        "order_id": "{{ razorpay_order_id }}",
+        "handler": function (response){
+            document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+            document.getElementById('razorpay_signature').value = response.razorpay_signature;
+            document.getElementById('payment-form').submit();
+        },
+        "prefill": {
+            "name": "{{ user.username }}",
+            "email": "{{ user.email|default:'' }}"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+
+    var rzp1 = new Razorpay(options);
+    document.getElementById('rzp-button').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+  </script>
+
+{% else %}
+  <p>Your cart is empty.</p>
+{% endif %}
+
+<a href="{% url 'cart_view' %}" class="btn btn-link mt-3">
+  Back to Cart
+</a>
+{% endblock %}

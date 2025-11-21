@@ -1,0 +1,41 @@
+{% extends "products/base.html" %}
+
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Our Products</h1>
+
+{% if products %}
+  <div class="row">
+    {% for product in products %}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text text-muted">
+              {{ product.description|default:"No description."|truncatewords:20 }}
+            </p>
+            <p class="mb-1">
+              <strong>₹ {{ product.price }}</strong>
+            </p>
+            <p class="text-muted mb-3">Stock: {{ product.stock }}</p>
+
+            <div class="mt-auto">
+              <a href="{% url 'product_detail' product.id %}"
+                 class="btn btn-sm btn-outline-secondary">
+                View Details
+              </a>
+              <a href="{% url 'add_to_cart' product.id %}"
+                 class="btn btn-sm btn-primary ms-2">
+                Add to Cart
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No products yet.</p>
+{% endif %}
+{% endblock %}
