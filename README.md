@@ -1,7 +1,11 @@
 🛒 Django E-Commerce Project
 
+🚀 Live Demo: https://your-render-app-name.onrender.com  
+☁️ Deployed on Render (Production Environment)
+
+
 A full-featured Django E-Commerce Web Application with product listing, cart management, user authentication, checkout, and Razorpay Payment Gateway integration.
-Built using Python, Django, MySQL, Bootstrap, and follows clean architecture.
+Built using Python, Django, PostgreSQL (Production), MySQL (Local), Bootstrap, and follows clean architecture.
   
 ---
 🚀 Features
@@ -85,14 +89,29 @@ Built using Python, Django, MySQL, Bootstrap, and follows clean architecture.
 
 ---
 
-| Layer           | Technology            |
-| --------------- | --------------------- |
-| Backend         | Django 5 (Python)     |
-| Frontend        | HTML, CSS, Bootstrap  |
-| Database        | MySQL                 |
-| Payment         | Razorpay API          |
-| Auth            | Django Authentication |
-| Version Control | Git & GitHub          |
+TECH STACK (Production-Accurate)
+
+| Layer           | Technology                                   |
+| --------------- | -------------------------------------------- |
+| Backend         | Django 5 (Python)                            |
+| Frontend        | HTML, CSS, Bootstrap                         |
+| Database        | PostgreSQL (Production), MySQL (Local)       |
+| Payment         | Razorpay API                                 |
+| Auth            | Django Authentication                        |
+| Deployment      | Render (Cloud Platform)                      |
+| CI/CD           | GitHub Auto Deployment                       |
+| Version Control | Git & GitHub                                 |
+
+---
+
+☁️ Deployment (Production)
+
+- Deployed Django application on Render cloud platform  
+- Connected to managed PostgreSQL database for production  
+- Environment variables used for sensitive configurations  
+- Automatic deployment enabled via GitHub (CI/CD)  
+- Production-ready settings with DEBUG disabled  
+
 
 
 ---
@@ -128,7 +147,7 @@ Built using Python, Django, MySQL, Bootstrap, and follows clean architecture.
     
 -----
 
-🛠 Installation & Setup
+🛠 Local Development Setup
 
 1️⃣ Clone the repository
 
@@ -215,9 +234,9 @@ Steps:
 
 👨‍💻 Author
 
-  Manoj V Poojar
+Manoj V Poojar  
+Python & Django Developer | Backend Engineer
 
-  Python & Django Developer
 
 
 
