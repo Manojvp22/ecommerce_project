@@ -228,7 +228,7 @@ Steps:
 
   *  REST API using DRF
 
-  *  Product images
+  *  Cloud-based media storage (Cloudinary / S3)
 
 ----
 
