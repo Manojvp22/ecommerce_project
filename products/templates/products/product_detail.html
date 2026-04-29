@@ -1,21 +1,38 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ product.name }}</title>
-</head>
-<body>
-    <h1>{{ product.name }}</h1>
-    <p>{{ product.description }}</p>
-    <p><strong>Price:</strong> ${{ product.price }}</p>
-    <p><strong>Stock:</strong> {{ product.stock }} available</p>
+{% extends "products/base.html" %}
 
-    <p>
-        <a href="{% url 'add_to_cart' product.id %}">Add to Cart</a>
-    </p>
+{% block title %}{{ product.name }}{% endblock %}
 
-    <p>
-        <a href="{% url 'product_list' %}">Back to Product List</a> |
-        <a href="{% url 'cart_view' %}">Go to Cart</a>
-    </p>
-</body>
-</html>
+{% block content %}
+<div class="shop-page">
+  <div class="container">
+    <div class="shop-surface p-3 p-md-4">
+      <div class="row g-4 align-items-center">
+        <div class="col-md-6">
+          {% if product.image %}
+            <img src="{{ product.image.url }}"
+                 class="img-fluid rounded product-media p-4"
+                 alt="{{ product.name }}">
+          {% endif %}
+        </div>
+
+        <div class="col-md-6">
+          <div class="shop-kicker mb-2">Product detail</div>
+          <h1 class="fw-bold mb-3">{{ product.name }}</h1>
+          <p class="lead text-muted">{{ product.description }}</p>
+          <p class="display-6 fw-bold text-success mb-2">Rs. {{ product.price }}</p>
+          <p class="text-muted mb-4">Stock: {{ product.stock }} available</p>
+
+          <div class="d-flex flex-column flex-sm-row gap-2">
+            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary px-4 py-2">
+              Add to Cart
+            </a>
+            <a href="{% url 'product_list' %}" class="btn btn-outline-secondary px-4 py-2">
+              Back to Products
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

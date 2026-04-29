@@ -1,11 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Order Success</title>
-</head>
-<body>
-  <h1>Order Placed Successfully! 🎉</h1>
-  <p>Thank you for your purchase.</p>
-  <p><a href="{% url 'product_list' %}">Continue shopping</a></p>
-</body>
-</html>
+{% extends "products/base.html" %}
+
+{% block title %}Order Success{% endblock %}
+
+{% block content %}
+<div class="shop-page">
+  <div class="container">
+    <div class="shop-surface p-5 text-center">
+      <div class="shop-kicker mb-2">Order confirmed</div>
+      <h1 class="fw-bold mb-3">Order Placed Successfully</h1>
+      <p class="text-muted mb-4">Thank you for your purchase.</p>
+      <a href="{% url 'product_list' %}" class="btn btn-primary px-4 py-2">
+        Continue Shopping
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

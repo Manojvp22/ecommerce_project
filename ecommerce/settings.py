@@ -15,7 +15,11 @@ from dotenv import load_dotenv
 import os
 import dj_database_url
 
+
 load_dotenv()
+
+
+ENVIRONMENT = os.getenv("ENVIRONMENT", "local")
 
 
 
@@ -91,16 +95,27 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.parse(
-        os.environ.get("DATABASE_URL"),
-        conn_max_age=0,      # VERY IMPORTANT
-        ssl_require=True
-    )
-}
 
-
-
+# Database configuration based on environment(local or production)
+if ENVIRONMENT == "production":
+    DATABASES = {
+        'default': dj_database_url.parse(
+            os.environ.get("DATABASE_URL"),
+            conn_max_age=0,
+            ssl_require=True
+        )
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'ecommerce_db',
+            'USER': 'root',
+            'PASSWORD': 'Manojvp@1978',
+            'HOST': '127.0.0.1',
+            'PORT': '3306',
+        }
+    }
 
 
 # Password validation
@@ -142,6 +157,9 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -155,10 +173,13 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'product_list'
 LOGOUT_REDIRECT_URL = 'login'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'My Shop <noreply@myshop.local>'
+
 # ==========================================
 # Razorpay Payment Gateway Settings
 # ==========================================
-RAZORPAY_KEY_ID = 'rzp_test_Ri5SJe2nQhcKbv'        # <-- put YOUR key here
-RAZORPAY_KEY_SECRET = 'nioO4V9wGdAUcjLrbIwx3fVc' # <-- put YOUR secret key here
+RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID", "rzp_test_Ri5SJe2nQhcKbv")
+RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "nioO4V9wGdAUcjLrbIwx3fVc")
 
 

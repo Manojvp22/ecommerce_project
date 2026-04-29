@@ -109,7 +109,7 @@ def remove_cart_item(request, item_id):
 # -----------------------------
 @login_required
 def checkout(request):
-    """Create Razorpay order and show checkout page."""
+    """Create a Razorpay order and show the checkout summary."""
     cart, _ = Cart.objects.get_or_create(user=request.user)
     cart_items = cart.items.all()
     total_price = sum(item.total_price() for item in cart_items)
@@ -118,25 +118,33 @@ def checkout(request):
         messages.error(request, "Your cart is empty.")
         return redirect('product_list')
 
-    # 1) Create our own Order record
     order = Order.objects.create(
         user=request.user,
         amount=total_price,
         status='created',
     )
 
-    # 2) Razorpay expects amount in paise (integer)
     razorpay_amount = int(total_price * 100)
 
-    # 3) API call to Razorpay to create an order
-    razorpay_order = client.order.create({
-        "amount": razorpay_amount,
-        "currency": "INR",
-        "payment_capture": 1,
-        "notes": {"internal_order_id": str(order.id)},
-    })
+    try:
+        razorpay_order = client.order.create({
+            "amount": razorpay_amount,
+            "currency": "INR",
+            "payment_capture": 1,
+            "receipt": f"order_{order.id}",
+            "notes": {"internal_order_id": str(order.id)},
+        })
+    except razorpay.errors.BadRequestError as exc:
+        order.status = 'failed'
+        order.save()
+        messages.error(request, f"Payment setup failed: {exc}")
+        return redirect('cart_view')
+    except Exception:
+        order.status = 'failed'
+        order.save()
+        messages.error(request, "Payment setup failed. Please check Razorpay keys and try again.")
+        return redirect('cart_view')
 
-    # 4) Store Razorpay order id in our DB
     order.razorpay_order_id = razorpay_order["id"]
     order.save()
 
