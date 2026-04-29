@@ -1,247 +1,181 @@
-🛒 Django E-Commerce Project
+# Django E-Commerce Project
+
+A Django-based e-commerce web application with product browsing, product images, user authentication, cart management, Razorpay checkout, and order handling.
+
+Live demo: https://your-render-app-name.onrender.com
+
+## Features
+
+### Products
+
+- Product listing with images, prices, stock, and descriptions
+- Vertical product list layout
+- Product detail page
+- Seeded sample products with local media images
+- Admin support for managing product images
+
+### Cart
+
+- User-specific cart
+- Add products to cart
+- Quantity increases automatically when the same product is added again
+- Quantity changes auto-save from the cart page
+- Remove items from cart
+- Automatic subtotal and cart total calculation
+
+### Checkout And Payment
+
+- Checkout summary page
+- Razorpay popup checkout integration
+- Razorpay order creation
+- Payment signature verification
+- Order status tracking
+- Cart clears after successful payment
+
+### Authentication
+
+- Login
+- Register with email
+- Logout
+- Forgot password flow
+- Password reset pages
+- Show/hide password eye button on password fields
+
+### UI
 
-🚀 Live Demo: https://your-render-app-name.onrender.com  
-☁️ Deployed on Render (Production Environment)
+- Bootstrap-based responsive layout
+- Updated product list, product detail, cart, checkout, login, register, and password reset pages
+- Cleaner color theme
+- Product images display without cropping
 
+## Tech Stack
 
-A full-featured Django E-Commerce Web Application with product listing, cart management, user authentication, checkout, and Razorpay Payment Gateway integration.
-Built using Python, Django, PostgreSQL (Production), MySQL (Local), Bootstrap, and follows clean architecture.
-  
----
-🚀 Features
-🛍 Product Features
+| Layer | Technology |
+| --- | --- |
+| Backend | Django 5, Python |
+| Frontend | HTML, CSS, Bootstrap |
+| Local Database | MySQL |
+| Production Database | PostgreSQL |
+| Payment | Razorpay |
+| Auth | Django Authentication |
+| Deployment | Render |
+| Version Control | Git, GitHub |
 
-  *  Browse all products
+## Project Structure
 
-  *  Product details page
+```text
+ecommerce_project/
+├── accounts/
+│   ├── forms.py
+│   ├── urls.py
+│   ├── views.py
+│   └── templates/accounts/
+├── ecommerce/
+│   ├── settings.py
+│   └── urls.py
+├── media/products/
+├── products/
+│   ├── admin.py
+│   ├── models.py
+│   ├── urls.py
+│   ├── views.py
+│   ├── migrations/
+│   └── templates/products/
+├── manage.py
+├── requirements.txt
+└── README.md
+```
 
-  *  Add items to cart
+## Local Setup
 
-  * Update item quantity
+1. Clone the repository:
 
-  *  Remove products from cart
+```powershell
+git clone https://github.com/Manojvp22/ecommerce_project.git
+cd ecommerce_project
+```
 
-  *  Display price, stock, subtotal
+2. Create and activate a virtual environment:
 
-----
+```powershell
+python -m venv venv
+venv\Scripts\activate
+```
 
-🧺 Cart & Checkout
+3. Install dependencies:
 
-  *  User-specific cart
+```powershell
+python -m pip install -r requirements.txt
+```
 
-  *  Cart total auto-calculations
+4. Configure environment variables in `.env`:
 
-  *  Simple & clean UI
+```env
+ENVIRONMENT=local
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+```
 
-  *  Checkout page with Razorpay integration
+5. Apply migrations:
 
-----
+```powershell
+python manage.py migrate
+```
 
-💳 Payment Gateway (Razorpay)
+6. Create a superuser:
 
-  *  Create Razorpay order via REST API
+```powershell
+python manage.py createsuperuser
+```
 
-  *  Integrated Razorpay popup checkout
+7. Run the server:
 
-  *  Payment verification (signature check)
+```powershell
+python manage.py runserver
+```
 
-  *  Auto-clear cart on successful payment
+Open:
 
-  *  Store orders in database
+```text
+http://127.0.0.1:8000/
+```
 
-----
+## Razorpay Test Mode
 
-🔐 User Authentication
+The app supports Razorpay checkout. For local testing, use Razorpay test keys from the Razorpay dashboard.
 
-  *  Login / Register / Logout
+In test mode, use Razorpay test payment details inside the Razorpay popup. Do not scan a real QR code with test keys.
 
-  *  Cart linked to logged-in user
+## Important Commands
 
-  *  Secure pages using @login_required
+```powershell
+python manage.py check
+python manage.py migrate
+python manage.py runserver
+python -m pip freeze > requirements.txt
+```
 
-----
+## Deployment
 
-🗄 Database
+The project is prepared for Render deployment with:
 
-  *  MySQL configured
+- PostgreSQL support in production
+- Environment variable support
+- WhiteNoise static file serving
+- GitHub-based deployment flow
 
-  *  Models:
+## Future Enhancements
 
-    *  Product
+- Product search
+- Product categories
+- Order history page
+- Admin sales dashboard
+- Email notifications
+- Cloud media storage using Cloudinary or S3
+- REST API using Django REST Framework
 
-    *  Cart
+## Author
 
-    *  CartItem
+Manoj V Poojar
 
-    *  Order
-
-----
-
-🎨 Frontend
-
-  *  Bootstrap-based UI
-
-  *  Navbar
-
-  *  Product cards
-
-  *  Clean checkout UI 
-
----
-
-TECH STACK (Production-Accurate)
-
-| Layer           | Technology                                   |
-| --------------- | -------------------------------------------- |
-| Backend         | Django 5 (Python)                            |
-| Frontend        | HTML, CSS, Bootstrap                         |
-| Database        | PostgreSQL (Production), MySQL (Local)       |
-| Payment         | Razorpay API                                 |
-| Auth            | Django Authentication                        |
-| Deployment      | Render (Cloud Platform)                      |
-| CI/CD           | GitHub Auto Deployment                       |
-| Version Control | Git & GitHub                                 |
-
----
-
-☁️ Deployment (Production)
-
-- Deployed Django application on Render cloud platform  
-- Connected to managed PostgreSQL database for production  
-- Environment variables used for sensitive configurations  
-- Automatic deployment enabled via GitHub (CI/CD)  
-- Production-ready settings with DEBUG disabled  
-
-
-
----
-
-📂 Project Structure
-
-    ecommerce_project/
-    │── ecommerce/              # Project settings
-    │   ├── settings.py
-    │   ├── urls.py
-    │
-    │── accounts/               # Login / Register
-    │   ├── urls.py
-    │   ├── views.py
-    │
-    │── products/               # E-commerce logic
-    │   ├── models.py           # Product, Cart, CartItem, Order
-    │   ├── views.py
-    │   ├── urls.py
-    │   ├── templates/products/
-    │       ├── base.html
-    │       ├── product_list.html
-    │       ├── product_detail.html
-    │       ├── cart_view.html
-    │       ├── checkout.html
-    │       ├── order_success.html
-    │
-    │── requirements.txt
-    │── manage.py
-    │── README.md
-    │── .gitignore
-
-    
------
-
-🛠 Local Development Setup
-
-1️⃣ Clone the repository
-
-    git clone https://github.com/Manojvp22/ecommerce_project.git
-    cd ecommerce_project
-
-2️⃣ Create virtual environment
-
-    python -m venv venv
-    venv\Scripts\activate        # Windows
-    source venv/bin/activate    # Mac/Linux
-
-3️⃣ Install dependencies
-
-    pip install -r requirements.txt
-
-4️⃣ Configure MySQL in settings.py
-
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'ecommerce_db',
-            'USER': 'root',
-            'PASSWORD': 'YOUR_PASSWORD',
-            'HOST': '127.0.0.1',
-            'PORT': '3306',
-        }
-    }
-
-5️⃣ Apply migrations
-
-    python manage.py makemigrations
-    python manage.py migrate
-
-6️⃣ Create superuser
-
-    python manage.py createsuperuser
-
-7️⃣ Run the server
-
-    python manage.py runserver
-
-----
-
-💳 Razorpay Integration
-
-Steps:
-
-  1.  Go to Razorpay Dashboard → https://dashboard.razorpay.com
-
-  2.  Generate:
-
-    RAZORPAY_KEY_ID
-    RAZORPAY_KEY_SECRET
-
-  3.  Add to settings.py:
-
-    RAZORPAY_KEY_ID = "your_key_id"
-    RAZORPAY_KEY_SECRET = "your_secret_key"
-
-  4.  On checkout, Razorpay popup handles payment.
-
-  5.  Payment callback verifies signature and stores order details.
-
-----
-
-📌 Future Enhancements
-
-  *  Product categories
-
-  *  Search & filtering
-
-  *  Order history page
-
-  *  Admin sales dashboard
-
-  *  Email notifications
-
-  *  REST API using DRF
-
-  *  Cloud-based media storage (Cloudinary / S3)
-
-----
-
-👨‍💻 Author
-
-Manoj V Poojar  
-Python & Django Developer | Backend Engineer
-
-
-
-
-  
-
-    
-    
-
+Python and Django Developer
