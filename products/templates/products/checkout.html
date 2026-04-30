@@ -65,43 +65,100 @@
           </small>
         </div>
 
-        <form id="payment-form"
-              method="post"
-              action="{% url 'payment_callback' %}">
-          {% csrf_token %}
-          <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
-          <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
-          <input type="hidden" name="razorpay_signature" id="razorpay_signature">
-        </form>
-
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script>
-          var options = {
-              "key": "{{ razorpay_key_id }}",
-              "amount": "{{ razorpay_amount }}",
-              "currency": "INR",
-              "name": "My Shop",
-              "description": "Order Payment",
-              "order_id": "{{ razorpay_order_id }}",
-              "handler": function (response) {
-                  document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
-                  document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
-                  document.getElementById('razorpay_signature').value = response.razorpay_signature;
-                  document.getElementById('payment-form').submit();
-              },
-              "prefill": {
+          function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+              document.cookie.split(';').forEach(function(cookie) {
+                cookie = cookie.trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                }
+              });
+            }
+            return cookieValue;
+          }
+
+          var payButton = document.getElementById('rzp-button');
+          payButton.onclick = async function(e) {
+            e.preventDefault();
+            payButton.disabled = true;
+            payButton.innerText = 'Preparing Payment...';
+
+            try {
+              var orderResponse = await fetch("{% url 'create_razorpay_order' %}", {
+                method: 'POST',
+                headers: {'X-CSRFToken': getCookie('csrftoken')}
+              });
+              var orderData = await orderResponse.json();
+              if (!orderResponse.ok) {
+                alert(orderData.error || 'Unable to create payment order.');
+                return;
+              }
+
+              var options = {
+                key: orderData.key,
+                amount: orderData.amount,
+                currency: orderData.currency,
+                name: "My Shop",
+                description: "Order Payment",
+                order_id: orderData.order_id,
+
+                handler: async function(response) {
+                  var verifyData = new URLSearchParams();
+                  verifyData.append('razorpay_order_id', response.razorpay_order_id);
+                  verifyData.append('razorpay_payment_id', response.razorpay_payment_id);
+                  verifyData.append('razorpay_signature', response.razorpay_signature);
+
+                  var verifyResponse = await fetch("{% url 'verify_payment' %}", {
+                    method: 'POST',
+                    headers: {
+                      'X-CSRFToken': getCookie('csrftoken'),
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: verifyData.toString()
+                  });
+                  var verifyResult = await verifyResponse.json();
+
+                  if (verifyResponse.ok) {
+                    window.location.href = verifyResult.redirect_url;
+                  } else {
+                    alert(verifyResult.error || 'Payment verification failed.');
+                  }
+                },
+
+                model: {
+                  ondismiss: function() {
+                    console.log('Payment popup closed');
+                  }
+                },
+
+                redirect: false,  // Handle redirection manually after payment
+
+                "prefill": {
                   "name": "{{ user.username }}",
                   "email": "{{ user.email|default:'' }}"
-              },
-              "theme": {
+                },
+                "theme": {
                   "color": "#0f766e"
-              }
-          };
+                }
+              };
 
-          var rzp1 = new Razorpay(options);
-          document.getElementById('rzp-button').onclick = function(e) {
-              rzp1.open();
-              e.preventDefault();
+              var rzp = new Razorpay(options);
+              
+              rzp.on('payment.failed', function (response){
+                console.log('Payment failed:', response);
+              });
+
+              rzp.open();
+
+            } catch (error) {
+              alert('Payment setup failed. Please try again.');
+            } finally {
+              payButton.disabled = false;
+              payButton.innerText = 'Pay with Razorpay';
+            }
           };
         </script>
       </div>
