@@ -26,22 +26,23 @@ ENVIRONMENT = os.getenv("ENVIRONMENT", "local")
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv()  # Load environment variables from .env file
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9gr1i4ov7l#67!q91q5_yw%6c78*)w^u*0v-eu+n#-nom1#wk8'
+
+# In production, this should be set in the environment variable for security reasons.
+SECRET_KEY = os.getenv("SECRET_KEY")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = [
-    "ecommerce-project-0ai4.onrender.com",
-    ".onrender.com",
-    "localhost",
-    "127.0.0.1",
-]
+# Allow all hosts in development, but restrict in production
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 
 
@@ -179,7 +180,10 @@ DEFAULT_FROM_EMAIL = 'My Shop <noreply@myshop.local>'
 # ==========================================
 # Razorpay Payment Gateway Settings
 # ==========================================
-RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID", "rzp_test_Ri5SJe2nQhcKbv")
-RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "nioO4V9wGdAUcjLrbIwx3fVc")
+# In production, these should be set in the environment variables for security reasons.
+RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
+
+
 
 
